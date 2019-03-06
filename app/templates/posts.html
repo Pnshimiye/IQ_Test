@@ -1,0 +1,46 @@
+
+
+
+  
+  {% extends 'base.html'%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  {% block styles%}
+  {{ super() }}
+  <link rel="stylesheet" href="{{url_for('static',filename='index.css')}}">
+  {% endblock %}
+</head>
+<body style="background-color: grey">
+  <div id="middle" style="text-align: center">
+{%block content%}
+  {% for post in all_posts %}
+
+    <h2 style="text-align: center">{{post.user}}</h2>
+    <h3 style="text-align: center"> {{post.title}}</h3>
+    <p style="text-align: center">{{post.content}}</p>
+    <h4 style="text-align: center">comments</h4>
+         {%for comment in post.comments%}
+            
+         <p style="text-align: center;font-style:oblique;font-size: 18px;color:rgb(226, 188, 142)">{{comment.comment}}</p>   
+         
+         {%endfor%}
+                 
+    <a style="text-align: center" href ="comments/{{post.id}}"> Add Your Comment</a>   
+    <a style="text-align: center" href ="posts/{{post.id}}"> Delete this Post</a>            
+                 
+                
+               
+               
+            
+ 
+  {%endfor%}
+  {%endblock%}
+
+</div>
+</body>
+</html>

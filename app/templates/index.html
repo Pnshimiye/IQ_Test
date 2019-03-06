@@ -1,0 +1,68 @@
+{% extends 'base.html'%}
+{% import "bootstrap/wtf.html" as wtf %}
+
+
+
+<!-- {% import 'macros.html' as macro%} -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        {% if title %}
+        <title> {{ title }}</title>
+        {% else %}
+        <title> THE PITCH MEDIA </title>
+        {% endif %}
+
+        {% block styles%}
+        {{ super() }}
+        <link rel="stylesheet" href="{{url_for('static',filename='index.css')}}">
+        {% endblock %}
+
+
+    </head>
+  
+    <body>
+    <div class= "container" style="text-align: center;font-family: monospace">
+
+    {%block content%}    
+    <div class= "quote"style="background-image":>
+        
+        <h1 style="background-color:rgb(161, 160, 160);height:50px;margin-top:20px;">COMMON BLOGGING PLATFORM</h1>
+        <h5>Before we begin here is an inspiration Quote for you. if you do not like this one, just reflesh the page until you get one that you like</h5>
+
+        <h4>{{quote.quote}}</h4>
+        <p>{{quote.author}}</p>  
+    
+   </div> 
+    <br>
+    <br>
+              
+      <h3> FOR WRITERS</h3>
+
+
+       <p>Oftentimes we have I deas and don't know how to share them due to lack of time.<br>
+         We have made the task easier for you. you do not have to create a blog.<br>
+         All you have to do is just CERATE AN ACCOUNT on this platform and share your ideas all you want.<br>
+          As a writer you can delete comments to your blog Post if you find them insulting or not constructive
+       </p>
+
+
+       <br>
+       <br>
+       <h3>FOR SIMPLE VISITORS</h3>  
+       
+
+        <p>If you are here just to read and would love to  be notified everytime a new blog post is made please click on the subscribe button and leave us your mail address</p>
+        <a  class ="subs"href="/subscribe" style="text-align: center">subscribe</a>
+    {%endblock%} 
+    </div>               
+         
+        
+        
+
+    
+        
+    
+    </body>
+    </html>
