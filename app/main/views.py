@@ -1,51 +1,40 @@
-# from flask import render_template,redirect,url_for,abort
-# from . import main  
-# # from ..request import get_onequote 
-# from ..models import User,Post,Comment,Subscriber,Quote
-# from flask_login import login_required,current_user
-# from .. import db,photos 
-# from .forms import PostForm,CommentForm,SubscriberForm
-# from ..email import mail_message
-
-
-
-# # @main.route('/')
-# # def index():
-# #     """ View root page function that returns index page
-# #     """
-# #     all_posts = Post.get_posts()
-# #      quote = get_onequote()
+from flask import render_template,redirect,url_for,abort
+from . import main  
  
+from ..models import Question,Answer,Score,User
+from flask_login import login_required 
+from .. import db,photos 
+from .forms import QuestionForm
+from ..email import mail_message
 
-# #     title = 'Welcome to Blog Posts'
-# #     return render_template('index.html', quote=quote) 
 
 
 
-# @main.route('/post/new', methods = ['GET','POST'])
-# @login_required
-# def new_post():
-#     form = PostForm()
+
+
+@main.route('/question/new', methods = ['GET','POST'])
+ 
+def new_question():
+    form = QuestionForm()
   
-#     # movie = get_movie(id)
+    # question= get_question(id)
 
-#     if form.validate_on_submit():
-#         # title = form.title.data
-#         title= form.title.data
-#         content = form.content.data
-#         new_post = Post(user_id=current_user.id,title=title, content=content)
-#         new_post.save_post()
-#         return redirect(url_for('.index',content = content))
+    if form.validate_on_submit():
+        question = form.question.data
+ 
+        new_question = Question(question=question,answer_id=answer.id)
+        new_question.save_question()
+        return redirect(url_for('.index',question =question))
 
-#     # username = f'{user.username} pitch'
-#     return render_template('new_post.html', post_form=form)
+     
+    return render_template('new_question.html', question_form=form)
 
 
-# @main.route('/posts')
-# def display_post():
-#     all_posts = Post.get_posts()
-#     print(all_posts)
-#     return render_template("posts.html",all_posts=all_posts )
+@main.route('/questions')
+def display_question():
+    all_questions = Question.get_questions()
+  
+    return render_template("questions.html",all_questions=all_questions )
 
 
 

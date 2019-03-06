@@ -11,8 +11,7 @@ class User(UserMixin,db.Model):
     email = db.Column(db.String(255),unique = True,index = True)
     score_id= db.Column(db.Integer,db.ForeignKey('scores.id')) 
     profile_pic_path = db.Column(db.String())
-    pass_secure = db.Column(db.String(255))
-    # joint=db.relationship('Joint',backref ='users',lazy="dynamic")
+    pass_secure = db.Column(db.String(255))  
 
     
 
@@ -78,9 +77,16 @@ class Question(db.Model):
 
     id = db.Column(db.Integer,primary_key = True)
     question = db.Column(db.String(100))
+    image_path = db.Column(db.String())
     answers = db.relationship('Answer',backref ='questions',lazy="dynamic")
+  
+    def save_question(self):
+        db.session.add(self)
+        db.session.commit()
 
-    
+    def get_question(self):
+        question.query.filter_by(id)
+
 
 class Answer(db.Model):
     __tablename__ ='answers'
