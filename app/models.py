@@ -3,152 +3,147 @@ from werkzeug.security import generate_password_hash,check_password_hash
 from flask_login import UserMixin
 from . import login_manager
 
+
 class User(UserMixin,db.Model):
-        __tablename__ = 'users'
-        id = db.Column(db.Integer,primary_key = True)
-        username = db.Column(db.String(255),index = True)
-        email = db.Column(db.String(255),unique = True,index = True)
-        post = db.relationship('Post',backref = 'user',lazy="dynamic") 
-
-        profile_pic_path = db.Column(db.String())
-        pass_secure = db.Column(db.String(255))
-
-        
-
-        def is_authenticated(self):
-            return True
-
-        def is_active(self):
-            return True
-
-        def is_anonymous(self):
-            return False
-
-        def get_id(self):
-            return self.id
-
-        def __repr__(self):         
-            return f'User {self.username}'
-
-       
-
-        @property
-        def password(self):
-            raise AttributeError('You cannot read the password attribute')
-
-        @password.setter
-        def password(self, password):
-            self.pass_secure = generate_password_hash(password)
-
-
-        @login_manager.user_loader
-        def load_user(user_id):
-            return User.query.get(int(user_id))
-
-
-
-        def verify_password(self,password):
-            return check_password_hash(self.pass_secure, password)
-
-
-
-class Post(db.Model):
-        __tablename__ ='posts'    
-
-        id = db.Column(db.Integer,primary_key = True)
-        title= db.Column(db.String(50))
-        content= db.Column(db.String(400)) 
-        comment_id= db.relationship('Comment',backref = 'posts',lazy="dynamic")  
-        user_id = db.Column(db.Integer,db.ForeignKey('users.id'))  
-        
+    __tablename__ = 'users'
+    id = db.Column(db.Integer,primary_key = True)
+    username = db.Column(db.String(255),unique = True,index = True)
+    email = db.Column(db.String(255),unique = True,index = True)
+    score_id= db.Column(db.Integer,db.ForeignKey('scores.id')) 
+    profile_pic_path = db.Column(db.String())
+    pass_secure = db.Column(db.String(255))  
 
     
 
+    def is_authenticated(self):
+        return True
 
-        def save_post(self):
-            db.session.add(self)
-            db.session.commit()
+    def is_active(self):
+        return True
 
+    def is_anonymous(self):
+        return False
 
-        @classmethod
-        def clear_post(cls):
-            Post.all_posts.clear()
+    def get_id(self):
+        return self.id
 
-        @classmethod
-        def get_posts(id):
-            posts= Post.query.all()
-            return posts
+    def __repr__(self):         
+        return f'User {self.username}'
 
-        def delete_post(self):
-            db.session.delete(self)
-            db.session.commit()
+    
 
+    @property
+    def password(self):
+        raise AttributeError('You cannot read the password attribute')
 
-
-
-
-class Comment(db.Model):
-        __tablename__ ='comments'
-
-        id = db.Column(db.Integer,primary_key = True)
-        comment = db.Column(db.String(400))
-        # user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
-        post_id= db.Column(db.Integer,db.ForeignKey('posts.id'))
+    @password.setter
+    def password(self, password):
+        self.pass_secure = generate_password_hash(password)
 
 
-        def save_comment(self):
-            db.session.add(self)
-            db.session.commit()
-
-        @classmethod
-        def get_comment(self,id):
-
-            comment= Comment.query.filter_by(post_id=id).all()     
-
-            return comment
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
 
 
 
-class Quote:
-        '''
-        Quote class to define Quote Objects
-        '''
+    def verify_password(self,password):
+        return check_password_hash(self.pass_secure, password)
 
-        def __init__(self,author,id,quote):
-            self.author =author
-            self.id =id
-            self.quote = quote
+
+
+
+class Score(db.Model):
+    __tablename__ ='scores'
+
+    id = db.Column(db.Integer,primary_key = True)
+    score = db.Column(db.String(255))
+    user_id = db.relationship('User',backref ='scores',lazy="dynamic")
+
+
+    @classmethod
+    def get_scores(id):
+
+        scores= Score.query. filter_by(user_id)
+
+        return scores
 
 
 
 
 
+class Question(db.Model):
+    __tablename__ ='questions'
 
-class Subscriber(UserMixin, db.Model):
-   __tablename__="subscribers"
+    id = db.Column(db.Integer,primary_key = True)
+    question = db.Column(db.String(100))
+    image_path = db.Column(db.String())
+    answers = db.relationship('Answer',backref ='questions',lazy="dynamic")
+  
+    def save_question(self):
+        db.session.add(self)
+        db.session.commit()
 
-   id = db.Column(db.Integer, primary_key=True)
-   name = db.Column(db.String(255))
-   email = db.Column(db.String(255),unique = True,index = True)
-
-
-   def save_subscriber(self):
-       db.session.add(self)
-       db.session.commit()
-
-   @classmethod
-   def get_subscribers(cls,id):
-       return Subscriber.query.all()
+    def get_question(self):
+        question.query.filter_by(id)
 
 
-   def __repr__(self):
-       return f'User {self.email}'
+class Answer(db.Model):
+    __tablename__ ='answers'
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
+    id = db.Column(db.Integer,primary_key = True)
+    answer = db.Column(db.String(100))
+    mark = db.Column(db.Integer())
+    question_id = db.Column(db.Integer,db.ForeignKey('questions.id'))
+    # joint=db.relationship('Joint',backref ='answers',lazy="dynamic")
+
+    def save_answer(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def get_answer(self):
+        answer.query.filter_by(id)
+ 
+
+Joint = db.Table('joints',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+    db.Column('answer_id', db.Integer, db.ForeignKey('answers.id'), primary_key=True)
+)
+
+
+
+
+# class Page(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     tags = db.relationship('Tag', secondary=tags, lazy='subquery',
+#         backref=db.backref('pages', lazy=True))
+
+# class Tag(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+
+
+# class Joint(db.Model):
+
+#     __tablename__ ='joints'
+
+#     id = db.Column(db.Integer,primary_key = True)
+#     user_id = db.Column(db.Integer,db.ForeignKey('users.id')) 
+#     answer_id = db.Column(db.Integer,db.ForeignKey('answers.id'))
+
+
+
+
+ 
+
+ 
 
 
 
 
 
+
+
+
+
+
+ 

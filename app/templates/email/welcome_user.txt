@@ -1,2 +1,2 @@
 Hello {{user.username}}
- Welcome to the  common blogging platform. From now on every time a new post is made you will receive a notification email
+ Welcome!! we hope this app will help you know more about yourself

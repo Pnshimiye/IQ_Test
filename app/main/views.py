@@ -1,91 +1,80 @@
 from flask import render_template,redirect,url_for,abort
 from . import main  
-from ..request import get_onequote 
-from ..models import User,Post,Comment,Subscriber,Quote
-from flask_login import login_required,current_user
+ 
+from ..models import Question,Answer,Score,User
+from flask_login import login_required 
 from .. import db,photos 
-from .forms import PostForm,CommentForm,SubscriberForm
+from .forms import QuestionForm
 from ..email import mail_message
 
 
 
-# @main.route('/')
-# def index():
-#     """ View root page function that returns index page
-#     """
-#     all_posts = Post.get_posts()
-#      quote = get_onequote()
+
+
+
+@main.route('/question/new', methods = ['GET','POST'])
  
-
-#     title = 'Welcome to Blog Posts'
-#     return render_template('index.html', quote=quote) 
-
-
-
-@main.route('/post/new', methods = ['GET','POST'])
-@login_required
-def new_post():
-    form = PostForm()
+def new_question():
+    form = QuestionForm()
   
-    # movie = get_movie(id)
+    # question= get_question(id)
 
     if form.validate_on_submit():
-        # title = form.title.data
-        title= form.title.data
-        content = form.content.data
-        new_post = Post(user_id=current_user.id,title=title, content=content)
-        new_post.save_post()
-        return redirect(url_for('.index',content = content))
-
-    # username = f'{user.username} pitch'
-    return render_template('new_post.html', post_form=form)
-
-
-@main.route('/posts')
-def display_post():
-    all_posts = Post.get_posts()
-    print(all_posts)
-    return render_template("posts.html",all_posts=all_posts )
-
-
-
-@main.route('/posts')
-@login_required
-def delete_post():
-    removedPost = Post.delete_posts()  
-    return render_template("posts.html",removedPost=removedPost )
-
-
-
-@main.route('/comments/<int:id>', methods = ['GET','POST'])
+        question = form.question.data
  
-def new_comment(id):
-    form = CommentForm()  
-    post=Post.query.filter_by(id=id).first()
+        new_question = Question(question=question,answer_id=answer.id)
+        new_question.save_question()
+        return redirect(url_for('.index',question =question))
 
-    if form.validate_on_submit():
-        comment = form.comment.data
+     
+    return render_template('new_question.html', question_form=form)
+
+
+@main.route('/questions')
+def display_question():
+    all_questions = Question.get_questions()
+  
+    return render_template("questions.html",all_questions=all_questions )
+
+
+
+# @main.route('/posts')
+# @login_required
+# def delete_post():
+#     removedPost = Post.delete_posts()  
+#     return render_template("posts.html",removedPost=removedPost )
+
+
+
+# @main.route('/comments/<int:id>', methods = ['GET','POST'])
+ 
+# def new_comment(id):
+#     form = CommentForm()  
+#     post=Post.query.filter_by(id=id).first()
+
+#     if form.validate_on_submit():
+#         comment = form.comment.data
     
-        new_comment = Comment(user_id=current_user.id,post_id=post.id,comment=comment)
-        new_comment.save_comment()
-        return redirect(url_for('main.index',comment=comment))
+#         new_comment = Comment(user_id=current_user.id,post_id=post.id,comment=comment)
+#         new_comment.save_comment()
+#         return redirect(url_for('main.index',comment=comment))
 
-    return render_template('comments.html', comment_form=form)
+#     return render_template('comments.html', comment_form=form)
 
 
-@main.route('/subscribe',methods=["GET","POST"])
-def subscriber():
-    form=SubscriberForm()
+# @main.route('/subscribe',methods=["GET","POST"])
+# def subscriber():
+#     form=SubscriberForm()
 
-    if form.validate_on_submit():
-        subscriber = Subscriber(name=form.name.data,email=form.email.data)
-        db.session.add(subscriber)
-        db.session.commit()
+#     if form.validate_on_submit():
+#         subscriber = Subscriber(name=form.name.data,email=form.email.data)
+#         db.session.add(subscriber)
+#         db.session.commit()
 
-        mail_message("Welcome to this platform","email/welcome_user",subscriber.email,subscriber=subscriber)
-        return redirect(url_for('main.index'))
-        title = 'Subscribe'
-    return render_template('subscription.html',form=form)
+#         mail_message("Welcome to this platform","email/welcome_user",subscriber.email,subscriber=subscriber)
+#         return redirect(url_for('main.index'))
+#         title = 'Subscribe'
+#     return render_template('subscription.html',form=form)
 
 
  
@@ -118,16 +107,16 @@ def subscriber():
 #     '''
 #     return render_template('quotes.html',id = quote_id)
 
-@main.route('/')
-def index():
+# @main.route('/')
+# def index():
 
-    '''
-    View quote page function that returns the quote details page and its data
-    '''
-    quote = get_onequote()
+#     '''
+#     View quote page function that returns the quote details page and its data
+#     '''
+#     quote = get_onequote()
  
 
-    return render_template('index.html',quote=quote)
+#     return render_template('index.html',quote=quote)
 
 
  

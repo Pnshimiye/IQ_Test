@@ -1,12 +1,12 @@
 import os
 class TestConfig:
-    SQLALCHEMY_DATABASE_URI ='postgresql+psycopg2://pauline:0788812609@localhost/blog'
+    SQLALCHEMY_DATABASE_URI ='postgresql+psycopg2://pauline:0788812609@localhost/intelect'
 
 class Config:
     QUOTES_API_BASE_URL ='http://quotes.stormconsultancy.co.uk/random.json' 
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
-    SQLALCHEMY_DATABASE_URI ='postgresql+psycopg2://pauline:0788812609@localhost/blog'
+    SQLALCHEMY_DATABASE_URI ='postgresql+psycopg2://pauline:0788812609@localhost/intelect'
     UPLOADED_PHOTOS_DEST ='app/static/photos'
     # SECRET_KEY = '<Flask WTF Secret Key>'
 
